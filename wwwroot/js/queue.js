@@ -12,6 +12,19 @@ function removeTicket(id)
     redirect("/");
 }
 
+connection.on("RemoveFromHelplist",
+    (id) => updateQueue())
+
+var count = 0;
+function setCount(c){
+    count = c + 1;
+}
+function updateQueue()
+{
+    count--;
+    return count
+}
+
 function redirect(url)
 {
     location.replace(url);

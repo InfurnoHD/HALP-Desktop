@@ -49,6 +49,11 @@ namespace OperationCHAN.Hubs
             await Clients.Groups(ticket.Course).SendAsync("RemoveFromHelplist", ticketID);
         }
 
+        public async Task GetQueueNumber(int ticketID)
+        {
+            
+        }
+
         /// <summary>
         /// Removes an ticket from archive, and puts it back into the helplist
         /// </summary>
