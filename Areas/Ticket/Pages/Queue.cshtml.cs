@@ -32,7 +32,7 @@ public class Queue : PageModel
         
         if (id == 0)
         {
-            return Redirect("/error/error");
+            return Redirect("/error");
         }
 
         var ticket = _db.HelpList.First(ticket => ticket.Id == id);
@@ -43,7 +43,7 @@ public class Queue : PageModel
         
         if (Ticket.Status is "Removed" or "Finished")
         {
-            return Redirect("/error/error");
+            return Redirect("/error");
         }
 
         var count = 0;
