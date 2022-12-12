@@ -10,11 +10,9 @@ namespace OperationCHAN.Areas.Ticket.Pages;
 public class Queue : PageModel
 {
     private readonly ApplicationDbContext _db;
-    
     public IEnumerable<int> HelpLists { get; set; }
     public HelplistModel Ticket { get; set; }
     private IQueryable<HelplistModel> Tickets { get; set; }
-    
     public int Count { get; set; }
     
     public Queue(ApplicationDbContext db)
@@ -58,7 +56,6 @@ public class Queue : PageModel
 
             count++;
         }
-
 
         Count = count;
         

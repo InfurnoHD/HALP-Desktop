@@ -1,6 +1,6 @@
 ﻿"use strict";
 
-var connection = new signalR.HubConnectionBuilder().withUrl("/chatHub").build();
+var connection = new signalR.HubConnectionBuilder().withUrl("/helplisthub").build();
 connection.start();
 
 function removeTicket(id)
@@ -10,6 +10,24 @@ function removeTicket(id)
     });
 
     redirect("/");
+}
+
+connection.on("RemoveFromHelplist", (ticketID) => updateQueue)
+    {
+        console.log("test")
+    }
+    
+var count = 0;
+function setCount(c){
+    console.log("Count pre: ", count);
+    count = c + 1;
+    console.log("Count post: ", count);
+}
+function updateQueue()
+{
+    count--;
+    console.log(count);
+    document.write(count);
 }
 
 function redirect(url)

@@ -9,12 +9,10 @@ public class SettingsHub : Hub
 {
     private ApplicationDbContext _db;
     private UserManager<ApplicationUser> _um;
-    private RoleManager<IdentityRole> _rm;
-    public SettingsHub(ApplicationDbContext db, UserManager<ApplicationUser> um, RoleManager<IdentityRole> rm)
+    public SettingsHub(ApplicationDbContext db, UserManager<ApplicationUser> um)
     {
         _db = db;
         _um = um;
-        _rm = rm;
     }
     
     /// <summary>
@@ -86,20 +84,9 @@ public class SettingsHub : Hub
         }
         else
         {
-            // Check how many admins there are 
-            var adminRoleId = _db.Roles.First(role => role.Name == "Admin").Id;
-            var admins = _db.UserRoles.Select(role => role.RoleId == adminRoleId).ToList();
-
-            if (admins.Count <= 1)
-            {
-                await SetError("You are the only admin, and thus cannot be removed. Set a new admin first");
-            }
-            else
-            {
-                // Remove roles, and set them to user
-                await _um.RemoveFromRoleAsync(user, "Admin");
-                user.Role = "user";
-            }
+            // Remove roles, and set them to user
+            await _um.RemoveFromRoleAsync(user, "Admin");
+            user.Role = "user";
         }
         
         // Save changes
@@ -125,8 +112,31 @@ public class SettingsHub : Hub
         await Clients.Caller.SendAsync("ShowStudent", courses, isAdmin);
     }
 
-    public async Task SetError(string error)
+    /// <summary>
+    /// Add a new timeedit link
+    /// </summary>
+    /// <param name="link">The link to add</param>
+    public async Task AddTimeeditLink(string link)
     {
-        await Clients.Caller.SendAsync("ShowError", error);
+        _db.CourseLinks.Add(new CourseLinksModel(link));
+        _db.SaveChanges();
+    }
+
+    /// <summary>
+    /// Remove a timeedit link
+    /// </summary>
+    /// <param name="link">The link to remove</param>
+    public async Task RemoveTimeeditLink(string link)
+    {
+        link = link.Replace("html", "ics");
+        var links = _db.CourseLinks.Where(l => l.CourseLink == link).ToList();
+        if (links.Count > 0)
+        {
+            foreach (var _link in links)
+            {
+                _db.CourseLinks.Remove(_link);
+            }
+            _db.SaveChanges();
+        }
     }
 }
